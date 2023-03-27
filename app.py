@@ -16,13 +16,12 @@ def main_page():
 def login():
     return render_template('index.html')
 
-# IMC
-@app.route("/imc")
-def imc():
-    return render_template('index.html')
-
-
 # User profile
 @app.route("/user")
 def profil():
     return render_template('index.html')
+
+#IMC
+@app.route("/imc")
+def imc():
+    return render_template('imc.html')
