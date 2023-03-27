@@ -1,6 +1,6 @@
-
 from flask import Flask, render_template, redirect, session, request, jsonify
 import sqlite3
+
 
 app = Flask(__name__)
 PATH_DATABASE = 'imcpersonnes.db'
@@ -68,6 +68,7 @@ def valid_profil(username:str,email:str,password:str,age:str):
         return False
     return True
 
+
 @app.route("/imc", methods=['POST', 'GET'])
 def imc():
     if request.method == 'POST':
@@ -90,6 +91,6 @@ def imc():
         return render_template('imc.html', imc=imc, imc_color=imc_color) # passe le résultat de l'IMC à votre modèle HTML
     
     return render_template('imc.html')
-
+    
 def computeImc(poids, taille):
     return round(poids / ((taille / 100) ** 2) , 2)
