@@ -2,8 +2,8 @@
 
 CREATE TABLE IF NOT EXISTS Users (
 id integer primary key autoincrement, 
-name VARCHAR(30), 
-surname VARCHAR(30), 
+lastName VARCHAR(30), 
+firstName VARCHAR(30), 
 mail VARCHAR(30)NOT NULL UNIQUE, 
 passwd VARCHAR(30)NOT NULL, 
 age integer
