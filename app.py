@@ -25,3 +25,4 @@ def profil():
 @app.route("/imc")
 def imc():
     return render_template('imc.html')
+
