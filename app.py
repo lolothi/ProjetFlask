@@ -4,7 +4,7 @@ import sqlite3
 
 app = Flask(__name__)
 PATH_DATABASE = 'imcpersonnes.db'
-PATH = "/home/vincent/myproject/ProjetFlask/"
+PATH = "./"
 
 def get_db():
     return sqlite3.connect(PATH_DATABASE)	
