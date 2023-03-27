@@ -53,7 +53,7 @@ def profil():
             #TODO : Update user row in db
             return redirect("/imc")
         else:
-            error = "One of the field is null"
+            error = "One of the fields is null"
     
     return render_template(
         'user-profil.html', 
