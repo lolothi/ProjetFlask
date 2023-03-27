@@ -11,14 +11,17 @@ python3 -m venv venv
 
 #Activation
 source venv/bin/activate
+#(Windows)
+venv\Scripts\activate.bat
+
 # For Fish : source venv/bin/activate.fish
 
 pip install -r ./requirements.txt
 ```
 
-# loancer le server
+# lancer le server
 On your computer:
 
 ```sh
-flask --app app run
+flask --app app run --port [numero de port]
 ```
