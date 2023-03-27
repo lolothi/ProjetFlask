@@ -40,7 +40,6 @@ def profil():
         else:
             error = "One of the field is null"
     
-
     return render_template(
         'user-profil.html', 
         username = username, 
@@ -53,6 +52,7 @@ def valid_profil(username:str,email:str,password:str,age:str):
     if(len(username) == 0 or len(email) == 0 or len(password) == 0 or len(age) == 0):
         return False
     return True
+
 @app.route("/imc", methods=['POST', 'GET'])
 def imc():
     if request.method == 'POST':
@@ -75,7 +75,6 @@ def imc():
         return render_template('imc.html', imc=imc, imc_color=imc_color) # passe le résultat de l'IMC à votre modèle HTML
     
     return render_template('imc.html')
-
 
 def computeImc(poids, taille):
     return round(poids / ((taille / 100) ** 2) , 2)
