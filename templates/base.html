@@ -1,0 +1,18 @@
+<!doctype html>
+<title>{% block title %}{% endblock %}</title>
+<nav>
+    <a style="color: #ff8c00">IMC calculator</a>
+    {% if session['user'] %}
+        <a>{{session['user']}}</a>
+        <a href="{{ url_for('logout') }}">logout</a>
+    {% else %}
+        <a href="{{ url_for('login') }}">login</a>
+        <a href="{{ url_for('register') }}">register</a>
+    {% endif %}
+</nav>
+<section class="content">
+  <header>
+    {% block header %}{% endblock %}
+  </header>
+  {% block content %}{% endblock %}
+</section>
