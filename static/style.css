@@ -5,3 +5,87 @@
 .error {
     color: red;
 }
+
+#retour {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+}
+
+body{
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #151414;
+    color: #fff;
+}
+h1 {
+    text-align: center;
+    margin-top: 50px;
+    color: #ff8c00;
+}
+form {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 30px;
+    background-color: #292929;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+label {
+    display: block;
+    margin-bottom: 10px;
+    color: #ff8c00;
+}
+#poids,#taille {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+    background-color: #414141;
+    color: #fff;
+}
+button{
+    display: block;
+    margin-top: 20px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    background-color: #ff8c00;
+    color: #fff;
+    font-size: 16px;
+    cursor: pointer;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+}
+button:hover {
+    background-color: #404040;
+}
+
+.result {
+    font-family: Arial, sans-serif;
+    background-color: #282828;
+    border-radius: 5px;
+    color: #fff;
+    margin: 2rem auto;
+    max-width: 500px;
+    padding: 1rem;
+    text-align: center;
+}
+#resultat {
+    font-size: 2em;
+    margin-top: 20px;
+    text-align: center;
+}
+
+#resultat.vert {
+    color: #00FF00;
+}
+
+#resultat.jaune {
+    color: #FFFF00;
+}
+
+#resultat.rouge {
+    color: #FF0000;
+}
