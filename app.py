@@ -3,6 +3,7 @@ import sqlite3
 
 app = Flask(__name__)
 NAME_DATABASE = 'imcpersonnes.db'
+PATH = "./"
 
 #Modify PATH to your environment
 
@@ -68,26 +69,10 @@ def getUserInfo(user) :
 		return res
 	return False
 		
-#Get parameters for DB
-confSQL = open(PATH+"confSQL.sql","r")
 
-#Connect to DB
-db = get_db()
-
-#Create tables if needed
-db.executescript(confSQL.read())
-
-#Tests
-#db.execute("insert into Users (lastName,firstName,mail,passwd,age) values ('EVIEUX','Vincent','vincent@mail.com','motdepasse',25)")
-#db.execute("insert into History (height,weight,idUser,date_create) values (177,70.5,1,'2022-03-28')")
-#print(isAccountOK("vincent@mail.com","motdepasse"))
-#print(getWeightUser("vincent@mail.com"))
-#print(getHeightUser("vincent@mail.com"))
-#print(getUserInfo("vincent@mail.com"))
 
 
 app = Flask(__name__)
-PATH = "./"
 
 
 app = Flask(__name__)
@@ -169,3 +154,23 @@ def imc():
     
 def computeImc(poids, taille):
     return round(poids / ((taille / 100) ** 2) , 2)
+    
+    
+    
+    
+#Get parameters for DB
+confSQL = open(PATH+"confSQL.sql","r")
+
+#Connect to DB
+db = get_db()
+
+#Create tables if needed
+db.executescript(confSQL.read())
+
+#Tests
+#db.execute("insert into Users (lastName,firstName,mail,passwd,age) values ('EVIEUX','Vincent','vincent@mail.com','motdepasse',25)")
+#db.execute("insert into History (height,weight,idUser,date_create) values (177,70.5,1,'2022-03-28')")
+#print(isAccountOK("vincent@mail.com","motdepasse"))
+#print(getWeightUser("vincent@mail.com"))
+#print(getHeightUser("vincent@mail.com"))
+#print(getUserInfo("vincent@mail.com"))

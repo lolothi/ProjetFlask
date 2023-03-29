@@ -4,6 +4,7 @@ CREATE TABLE IF NOT EXISTS Users (
 id integer primary key autoincrement, 
 lastName VARCHAR(30), 
 firstName VARCHAR(30), 
+username VARCHAR(30) NOT NULL,
 mail VARCHAR(30)NOT NULL UNIQUE, 
 passwd VARCHAR(30)NOT NULL, 
 age smallint
