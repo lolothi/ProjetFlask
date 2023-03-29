@@ -11,6 +11,7 @@ app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
 def get_db():
     return sqlite3.connect(NAME_DATABASE)	
 
+
 def isAccountOK(mail,passwd) :
 	reqSQL = "select passwd from Users where mail = "
 	reqSQL += "'" + mail + "'"
@@ -57,15 +58,15 @@ def getHeightUser(user) :
 def getUserInfo(user) :
 	reqSQL = "select firstName, lastName,age from Users "
 	reqSQL += "where mail = '" + user + "' " 
-	
+
 	cur = db.cursor()
 	req = cur.execute(reqSQL)
 	res = req.fetchone()
 	
 	if res != None :
-		return res
+		return res[1]		
 	return False
-
+		
 # html = "index.html"
 
 # welcome page
@@ -213,4 +214,5 @@ db.executescript(confSQL.read())
 #print(getWeightUser("vincent@mail.com"))
 #print(getHeightUser("vincent@mail.com"))
 #print(getUserInfo("vincent@mail.com"))
+
 
