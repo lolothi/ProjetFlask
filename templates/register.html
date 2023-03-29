@@ -14,10 +14,10 @@
     <a href="{{ url_for('login') }}">login</a>
     <br/>    
     {% if error %}
-    <p style="color: red;">{{error}}</p>
+    <p class="error">{{error}}</p>
     {% endif %}
     {% if message %}
-      <a style="color:  darkgoldenrod;">{{message}}</a>
+      <a class="message">{{message}}</a>
     {% endif %}
   </form>
 {% endblock %}

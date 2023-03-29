@@ -1,1 +1,7 @@
-/* first CSS file */
+.message {
+    color:  darkgoldenrod;
+}
+
+.error {
+    color: red;
+}

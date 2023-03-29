@@ -14,11 +14,11 @@
     <a href="{{ url_for('register') }}">register</a>
     <br/>
     {% if message %}
-        <a style="color:  darkgoldenrod;">{{message}}</a>
+        <a class="message">{{message}}</a>
     {% endif %}
     <br/>
     {% if error %}
-    <p style="color: red;" >{{error}}</p>
+    <p class="error">{{error}}</p>
     {% endif %}
     <br/>
   </form>

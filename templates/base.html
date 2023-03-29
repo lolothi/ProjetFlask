@@ -1,9 +1,11 @@
 <!doctype html>
 <title>{% block title %}{% endblock %}</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 <nav>
     <a style="color: #ff8c00">IMC calculator</a>
     {% if session['user'] %}
         <a>{{session['user']}}</a>
+        <a href="{{ url_for('profil')}}">profil</a>
         <a href="{{ url_for('logout') }}">logout</a>
     {% else %}
         <a href="{{ url_for('login') }}">login</a>
