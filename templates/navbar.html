@@ -1,0 +1,6 @@
+{% block content %}
+    {% if connected_user %}
+        <a>Connected user {{connected_user}}</a>
+        <a href="{{ url_for('logout') }}">logout</a>
+    {% endif %}
+{% endblock %}
