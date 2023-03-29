@@ -2,30 +2,13 @@ from flask import Flask, render_template, request, session, redirect
 import sqlite3
 
 app = Flask(__name__)
-app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
-
 NAME_DATABASE = 'imcpersonnes.db'
+PATH = "./"
+app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
 
 def get_db():
     return sqlite3.connect(NAME_DATABASE)	
-#print(confSQL.read())
 
-#Connect to DB
-db = get_db()
-
-#Get parameters for DB
-confSQL = open("confSQL.sql","r")
-
-#Create tables if needed
-db.executescript(confSQL.read())
-
-#Tests
-#db.execute("insert into Users (lastName,firstName,mail,passwd,age) values ('EVIEUX','Vincent','vincent@mail.com','motdepasse',25)")
-#db.execute("insert into History (height,weight,idUser,date_create) values (177,70.5,1,'2022-03-28')")
-#print(isAccountOK("vincent@mail.com","motdepasse"))
-#print(getWeightUser("vincent@mail.com"))
-#print(getHeightUser("vincent@mail.com"))
-#print(getUserInfo("vincent@mail.com"))
 
 def isAccountOK(mail,passwd) :
 	reqSQL = "select passwd from Users where mail = "
@@ -81,6 +64,7 @@ def getUserInfo(user) :
 	if res != None :
 		return res
 	return False
+		
 		
 # html = "index.html"
 
@@ -205,6 +189,13 @@ def imc():
 
 
 def computeImc(poids, taille):
-    return round(poids / ((taille / 100) ** 2), 2)
-    
+    return round(poids / ((taille / 100) ** 2) , 2)
 
+#Connect to DB
+db = get_db()
+
+#Get parameters for DB
+confSQL = open("confSQL.sql","r")
+
+#Create tables if needed
+db.executescript(confSQL.read())
