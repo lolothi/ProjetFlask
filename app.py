@@ -19,7 +19,6 @@ confSQL = open("confSQL.sql","r")
 #Create tables if needed
 db.executescript(confSQL.read())
 
-
 #Tests
 #db.execute("insert into Users (lastName,firstName,mail,passwd,age) values ('EVIEUX','Vincent','vincent@mail.com','motdepasse',25)")
 #db.execute("insert into History (height,weight,idUser,date_create) values (177,70.5,1,'2022-03-28')")
@@ -27,7 +26,6 @@ db.executescript(confSQL.read())
 #print(getWeightUser("vincent@mail.com"))
 #print(getHeightUser("vincent@mail.com"))
 #print(getUserInfo("vincent@mail.com"))
-
 
 def isAccountOK(mail,passwd) :
 	reqSQL = "select passwd from Users where mail = "
@@ -91,24 +89,20 @@ def getUserInfo(user) :
 def main_page():
     return render_template("index.html")
 
-
 # Login
-user_db = []  #en attendant l'acces à la db
+user_db = []  # Liste de dict : en attendant l'acces à la db
 @app.route("/login", methods=["POST", "GET"])
 def login():
+    error, message = None
+    email = request.form.get("email")
+    password = request.form.get("password")
 
     try:
+        # check if user is connected
         connected_user = session["user"]
     except:
         session["user"] = None
-        print("SESSION DECONNECTIOn")
         connected_user = None
-
-    print("--DB--", user_db)
-    error = None
-    message = None
-    email = request.form.get("email")
-    password = request.form.get("password")
 
     if request.method == "POST":
         # vérifier l'existence de l'email dans la db (list of dict)
@@ -129,7 +123,7 @@ def login():
 
     return render_template("login.html", message=message, error=error, connected_user=connected_user)
 
-
+# Register user if new one
 @app.route("/register", methods=["POST", "GET"])
 def register():
     message = None
@@ -143,12 +137,11 @@ def register():
 
     return render_template("register.html", message=message)
 
-
+# Logout user if connected
 @app.route("/logout")
 def logout():
     session.pop("user", None)
     return redirect('/')
-
 
 # User profile
 @app.route("/user", methods=["GET", "POST"])
