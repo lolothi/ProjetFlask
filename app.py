@@ -84,7 +84,7 @@ def getUserInfo(user) :
 		
 # html = "index.html"
 
-# Page d'accueil
+# welcome page
 @app.route("/")
 def main_page():
     return render_template("index.html")
@@ -96,25 +96,26 @@ def login():
     error = None 
     message = None
     email = request.form.get("email")
-    password = request.form.get("password")
+    passwd = request.form.get("passwd")
 
     try:
         # check if user is connected
-        connected_user = session["user"]
+        connected_user = session["user"]["username"]
     except:
         session["user"] = None
         connected_user = None
-
+    print('SESSION', connected_user)
+    print('DB', user_db)
     if request.method == "POST":
         # vérifier l'existence de l'email dans la db (list of dict)
         # if (any(email in d['email'] for d in user_db)):
         for user in user_db:
             if email == user["email"]:
-                if password == user["password"]:
-                    session["user"] = email
-                    connected_user = email
+                if passwd == user["passwd"]:
+                    session["user"] = {"email":email, "username":user["username"]}
+                    connected_user = user["username"]
                     message = "utilisateur connecté"
-                    break
+                    return redirect('/imc')
                 else:
                     message = None
                     error = "mauvais mot de passe"
@@ -129,11 +130,12 @@ def login():
 def register():
     message = None
     email = request.form.get("email")
-    password = request.form.get("password")
+    passwd = request.form.get("passwd")
+    username = request.form.get("username")
 
     if request.method == "POST":
-        if email and password:
-            user_db.append({"email": email, "password": password})
+        if email and passwd:
+            user_db.append({"email": email, "passwd": passwd, "username":username})
             message = "utilisateur créé"
 
     return render_template("register.html", message=message)

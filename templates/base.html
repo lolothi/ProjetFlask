@@ -4,7 +4,7 @@
 <nav>
     <a style="color: #ff8c00">IMC calculator</a>
     {% if session['user'] %}
-        <a>{{session['user']}}</a>
+        <a>{{session['user']['username']}}</a>
         <a href="{{ url_for('profil')}}">profil</a>
         <a href="{{ url_for('logout') }}">logout</a>
     {% else %}
