@@ -8,8 +8,10 @@
   <form method="post" enctype="multipart/form-data">
     <label for="email">Email</label>
     <input name="email" id="email" required>
-    <label for="password">Mot de passe</label>
-    <input type="password" name="password" id="password" required>
+    <label for="username">identifiant</label>
+    <input name="username" id="username" required>
+    <label for="passwd">Mot de passe</label>
+    <input type="password" name="passwd" id="passwd" required>
     <input type="submit" value="Register">
     <a href="{{ url_for('login') }}">login</a>
     <br/>    
