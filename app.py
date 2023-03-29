@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, session, redirect
+from flask import Flask, render_template, request, session, redirect, url_for
 import sqlite3
 
 app = Flask(__name__)
@@ -197,37 +197,6 @@ def valid_profil(username: str, email: str, password: str, age: str):
         return False
     return True
 
-
-@app.route("/imc", methods=["POST", "GET"])
-def imc():
-    if request.method == "POST":
-        poids = float(request.form["poids"])
-        taille = float(request.form["taille"])
-        imc = computeImc(poids, taille)
-        if imc:
-            if imc < 16:
-                imc_color = "rouge"
-            elif imc < 18:
-                imc_color = "jaune"
-            elif imc < 24:
-                imc_color = "vert"
-            elif imc < 26:
-                imc_color = "jaune"
-            else:
-                imc_color = "rouge"
-
-        # redirect vers /imc
-        return render_template(
-            "imc.html", imc=imc, imc_color=imc_color
-        )  # passe le résultat de l'IMC à votre modèle HTML
-
-    return render_template("imc.html")
-
-
-def computeImc(poids, taille):
-    return round(poids / ((taille / 100) ** 2), 2)
-
-#######################################################################
 # Connect to DB
 db = get_db()
 
@@ -240,33 +209,20 @@ db.close()
 
 #Sample pour IMC
 # db.execute("insert into History (height,weight,idUser,date_create) values (177,70.5,1,'2022-03-28')")
-   
-#Tests
+# Tests
+# db.execute("insert into Users (lastName,firstName,username,mail,passwd,age) values ('EVIEUX','Vincent','Vincent','vincent@mail.com','motdepasse',25)")
+# db.execute("insert into History (height,weight,idUser,date_create) values (177,70.5,1,'2022-03-28')")
+# print(isAccountOK("vincent@mail.com","motdepasse"))
+# print(getWeightUser("vincent@mail.com"))
+# print(getHeightUser("vincent@mail.com"))
+# print(getUserInfo("vincent@mail.com"))
 
-#setInfoUser("vincent","vincent@mail.com", "motdepasse", "25", "Vincent", "EVIEUX") #User with full infos
-#setInfoUser("laurent","laurent@mail.com", "motdepasselaurent") #User with partial infos 
-#print("Test User OK : ")
-#print(isAccountOK("vincent@mail.com","motdepasse"))
-#print(isAccountOK("laurent@mail.com","motdepasselaurent"))
-#print("Test insert BDD :")
-#setDataUser("vincent@mail.com", "70.5","177")
-#setDataUser("laurent@mail.com","75","180")
-#setDataUser("vincent@mail.com", "71.5","177")
-#setDataUser("laurent@mail.com","76","180")
-#setDataUser("vincent@mail.com", "72.5","177")
-#setDataUser("laurent@mail.com","77","180")
-#print("Test1 get infos from BDD")
-#print(getWeightsUser("vincent@mail.com"))
-#print(getHeightsUser("vincent@mail.com"))
-#print("Test1 get infos from BDD")
-#print(getWeightsUser("laurent@mail.com"))
-#print(getHeightsUser("laurent@mail.com"))
-#db = get_db()
-#cur = db.cursor()
-#print("All users")
-#req = cur.execute("select * from Users")
-#res = req.fetchall()
-#print(res)
-#db.close()
-#print(getUserInfo("vincent@mail.com"))
-#print(getUserInfo("laurent@mail.com"))
+def imc(): #computes imc and returns it so it can be shown to users
+    if request.method == "POST": #when posting, we compute imc, save it to base then show it to the user
+        imc = round(request.form["poids"] / ((request.form["taille"] / 100.0 )** 2), 2)
+        imc_color = "rouge" if imc < 16 or imc >= 26 else "jaune" if imc < 18 else "vert" #colours front
+        if session.get('user'):
+            #TODO Sauvegarder les données dans la base de données
+            imc #TODO temporaire sinon le if geule (ne fait rien)
+        return render_template('imc.html', imc=imc, imc_color=imc_color) #rendering with result
+    return render_template("imc.html")#when GET, render empty form
