@@ -93,7 +93,8 @@ def main_page():
 user_db = []  # Liste de dict : en attendant l'acces à la db
 @app.route("/login", methods=["POST", "GET"])
 def login():
-    error, message = None
+    error = None 
+    message = None
     email = request.form.get("email")
     password = request.form.get("password")
 
