@@ -1,25 +1,24 @@
-from flask import Flask, render_template, request, session, redirect, url_for, jsonify
+from flask import Flask, render_template, request, session, redirect
 import sqlite3
 
 app = Flask(__name__)
 app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
 
 NAME_DATABASE = 'imcpersonnes.db'
-PATH = "./"
-#Modify PATH to your environment
 
 def get_db():
     return sqlite3.connect(NAME_DATABASE)	
 #print(confSQL.read())
 
-#Get parameters for DB
-confSQL = open(PATH+"confSQL.sql","r")
-
 #Connect to DB
 db = get_db()
 
+#Get parameters for DB
+confSQL = open("confSQL.sql","r")
+
 #Create tables if needed
 db.executescript(confSQL.read())
+
 
 #Tests
 #db.execute("insert into Users (lastName,firstName,mail,passwd,age) values ('EVIEUX','Vincent','vincent@mail.com','motdepasse',25)")
@@ -85,16 +84,6 @@ def getUserInfo(user) :
 		return res
 	return False
 		
-def get_db():
-    return sqlite3.connect(PATH)
-
-
-confSQL = open(PATH + "confSQL.sql", "r")
-
-db = get_db()
-# print(confSQL.read())
-db.executescript(confSQL.read())
-
 # html = "index.html"
 
 # Page d'accueil
