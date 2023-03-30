@@ -116,7 +116,6 @@ def updateInfoUser(userID, username, mail, passwd, age, firstName, lastName):
 
 @app.route("/")
 def main_page():
-    print(list(USER_PARAMS))
     return render_template("home.html")
 
 
