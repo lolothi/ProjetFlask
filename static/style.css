@@ -89,3 +89,49 @@ button:hover {
 #resultat.rouge {
     color: #FF0000;
 }
+
+/********** USER PROFIL **********/
+form {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 30px;
+    background-color: #292929;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    color: #ff8c00;
+}
+.title_user_profil{
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 30px;
+    color: #ff8c00;
+}
+.inputs {
+    width: 95%;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+    background-color: #414141;
+    color: #fff;
+}
+#submitBtn{
+    display: block;
+    margin-top: 20px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    background-color: #ff8c00;
+    color: #fff;
+    font-size: 16px;
+    cursor: pointer;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+}
+#submitBtn:hover {
+    background-color: #404040;
+}
+.error{
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 30px;
+}
