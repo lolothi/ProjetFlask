@@ -7,65 +7,83 @@ PATH = "./"
 app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
 
 #Modify PATH to your environment
-
 def get_db():
     return sqlite3.connect(NAME_DATABASE)	
 
-
 def isAccountOK(mail,passwd) :
-	reqSQL = "select passwd from Users where mail = "
-	reqSQL += "'" + mail + "'"
-	
+	db = get_db()
+	reqSQL = "select passwd from Users where mail = '" + mail + "'"
 	cur = db.cursor()
 	req = cur.execute(reqSQL)
 	res = req.fetchone()
-	
 	if res != None :
 		if res[0] == passwd :
+			db.close()
 			return True
 		else :
+			db.close()
 			return False
+	db.close()
 	return False
 
-def getWeightUser(user) :
-	reqSQL = "select max(History.id), weight from History "
-	reqSQL += "natural join Users "
-	reqSQL += "where mail = '" + user + "' " 
-	reqSQL += "group by weight "
-
+def getWeightsUser(user) :
+	db = get_db()
+	reqSQL = "select weight from History natural join Users where mail = '" + user + "' " 
 	cur = db.cursor()
 	req = cur.execute(reqSQL)
 	res = req.fetchone()
-	
 	if res != None :
-		return res[1]		
+		db.close()
+		return res[0]		
+	db.close()
 	return False
 	
-def getHeightUser(user) :
-	reqSQL = "select max(History.id), height from History "
-	reqSQL += "natural join Users "
-	reqSQL += "where mail = '" + user + "' " 
-	reqSQL += "group by height "
-
+def getHeightsUser(user) :
+	db = get_db()
+	reqSQL = "select height from History natural join Users where mail = '" + user + "' " 
 	cur = db.cursor()
 	req = cur.execute(reqSQL)
 	res = req.fetchone()
-	
 	if res != None :
-		return res[1]		
+		db.close()	
+		return res[0]		
+	db.close()
 	return False
 	
 def getUserInfo(user) :
-	reqSQL = "select firstName, lastName,age from Users "
-	reqSQL += "where mail = '" + user + "' " 
-
+	db = get_db()
+	reqSQL = "select firstName, lastName, age, mail, username from Users where mail = '" + user + "' " 
+	print(reqSQL)
+	cur = db.cursor()
+	req = cur.execute(reqSQL)
+	res = req.fetchall()
+	print(res)
+	if res != None :
+		db.close()
+		return res
+	db.close()		
+	return False
+	
+def setDataUser(user,weight,height) :
+	db = get_db()
+	reqSQL = "select id from Users where mail = '" + user + "';"
 	cur = db.cursor()
 	req = cur.execute(reqSQL)
 	res = req.fetchone()
+	idUser = str(res[0])
+	reqSQL = "insert into History (weight,height,date_create,idUser) values (" + weight + ", "+ height + ", date()," + idUser + ")"
+	cur = db.cursor()
+	req = cur.execute(reqSQL)
+	db.commit()
+	db.close()
 	
-	if res != None :
-		return res[1]		
-	return False
+def setInfoUser(username,mail,passwd,age="Null",firstName="Null",lastName="Null") :
+	db = get_db()
+	reqSQL = "insert into Users (username,mail,passwd,age,firstName,lastName) values ('" + username + "', '" + mail + "', '" + passwd + "', " + age + ", '" + firstName + "', '" + lastName + "')  "
+	cur = db.cursor()	
+	req = cur.execute(reqSQL)
+	db.commit()
+	db.close()
 		
 # html = "index.html"
 
@@ -73,7 +91,6 @@ def getUserInfo(user) :
 @app.route("/")
 def main_page():
     return render_template("index.html")
-
 
 # Login
 user_db = []  # Liste de dict : en attendant l'acces à la db
@@ -85,7 +102,6 @@ def login():
     message = None
     email = request.form.get("email")
     passwd = request.form.get("passwd")
-
     try:
         # check if user is connected
         connected_user = session["user"]["username"]
@@ -162,12 +178,10 @@ def profil():
 
     return render_template("user-profil.html", username=username, email=password, password=email, age=age, error=error)
 
-
 def valid_profil(username: str, email: str, password: str, age: str):
     if len(username) == 0 or len(email) == 0 or len(password) == 0 or len(age) == 0:
         return False
     return True
-
 
 @app.route("/imc", methods=["POST", "GET"])
 def imc():
@@ -206,13 +220,37 @@ confSQL = open("confSQL.sql", "r")
 
 # Create tables if needed
 db.executescript(confSQL.read())    
-    
+db.close()    
 #Tests
-#db.execute("insert into Users (lastName,firstName,mail,passwd,age) values ('EVIEUX','Vincent','vincent@mail.com','motdepasse',25)")
-#db.execute("insert into History (height,weight,idUser,date_create) values (177,70.5,1,'2022-03-28')")
-#print(isAccountOK("vincent@mail.com","motdepasse"))
-#print(getWeightUser("vincent@mail.com"))
-#print(getHeightUser("vincent@mail.com"))
-#print(getUserInfo("vincent@mail.com"))
+
+setInfoUser("vincent","vincent@mail.com", "motdepasse", "25", "Vincent", "EVIEUX") #User with full infos
+setInfoUser("laurent","laurent@mail.com", "motdepasselaurent") #User with partial infos 
+print("Test User OK : ")
+print(isAccountOK("vincent@mail.com","motdepasse"))
+print(isAccountOK("laurent@mail.com","motdepasselaurent"))
+print("Test insert BDD :")
+setDataUser("vincent@mail.com", "70.5","177")
+setDataUser("laurent@mail.com","75","180")
+print("Test1 get infos from BDD")
+print(getWeightsUser("vincent@mail.com"))
+print(getHeightsUser("vincent@mail.com"))
+print("Test1 get infos from BDD")
+print(getWeightsUser("laurent@mail.com"))
+print(getHeightsUser("laurent@mail.com"))
+db = get_db()
+cur = db.cursor()
+print("All users")
+req = cur.execute("select * from Users")
+res = req.fetchall()
+print(res)
+db.close()
+print(getUserInfo("vincent@mail.com"))
+print(getUserInfo("laurent@mail.com"))
+
+
+
+
+
+
 
 
