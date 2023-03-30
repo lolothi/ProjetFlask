@@ -102,7 +102,7 @@ def updateInfoUser(userID, username, mail, passwd, age, firstName, lastName):
 
 @app.route("/")
 def main_page():
-    return render_template("index.html")
+    return render_template("home.html")
 
 
 # Login
@@ -132,7 +132,7 @@ def login():
                                        "username": user["username"]}
                     connected_user = user["username"]
                     message = "utilisateur connecté"
-                    return redirect("/imc")
+                    return redirect("/")
                 else:
                     message = None
                     error = "mauvais mot de passe"
@@ -156,6 +156,7 @@ def register():
             setInfoUser(username, email, passwd)
             session["user"] = {"email": email, "username": username}
             message = "utilisateur créé"
+            return redirect("/")
 
     return render_template("register.html", message=message)
 
@@ -189,23 +190,17 @@ def profil():
         dom_email = request.form.get("email")
         dom_age = request.form.get("age")
 
-        if valid_profil(dom_username, dom_password, dom_email, dom_age):
+        if len(dom_username) > 0 and len(dom_email) > 0 and len(dom_password) > 0 :
             updateInfoUser(currentUser[0], dom_username, dom_email,
                            dom_password, dom_age, dom_firstName, dom_lastName)
             session["user"] = {"email": dom_email, "username": dom_username}
 
-            return redirect("/imc")
+            return redirect("/")
         else:
-            error = "One of the fields is null"
+            error = "One of the required fields is null"
 
-    return render_template("user-profil.html", lastName=lastName, firstName=firstName, username=username, email=password, password=email, age=age, error=error)
-
-
-def valid_profil(username: str, email: str, password: str, age: str):
-    if len(username) == 0 or len(email) == 0 or len(password) == 0 or len(age) == 0:
-        return False
-    return True
-
+    return render_template("user-profil.html", lastName=lastName, firstName=firstName, 
+                           username=username, email=password, password=email, age=age, error=error)
 
 # Connect to DB
 db = get_db()

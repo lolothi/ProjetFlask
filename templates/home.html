@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  {% if session['user'] %}
+    <h1>Welcome {{session['user']['username']}} !</h1>
+  {% endif %}
+{% endblock %}
+
+{% block content %}
+<body>
+    <a href='/imc' id="imcButton"> BMI calculator </button>
+</body>
+{% endblock %}

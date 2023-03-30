@@ -7,11 +7,11 @@
 {% block content %}
   <form method="post">
     <label for="email">Email</label>
-    <input name="email" id="email" required>
-    <label for="passwd">Mot de passe</label>
+    <input type="email" name="email" id="email" required>
+    <label for="passwd">Password</label>
     <input type="password" name="passwd" id="passwd" required>
     <input type="submit" value="Log In">
-    <a href="{{ url_for('register') }}">register</a>
+    <a href="{{ url_for('register') }}">Register</a>
     <br/>
     {% if message %}
         <a class="message">{{message}}</a>
