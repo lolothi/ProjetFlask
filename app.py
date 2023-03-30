@@ -10,13 +10,12 @@ app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
 
 
 def get_db():
-    return sqlite3.connect(NAME_DATABASE)
+    return sqlite3.connect(NAME_DATABASE, check_same_thread=False)
 
 
 def isAccountOK(mail, passwd):
-    reqSQL = "select passwd from Users where mail = "
-    reqSQL += "'" + mail + "'"
-
+    reqSQL = f"select passwd from Users where mail = {mail}"
+    
     cur = db.cursor()
     req = cur.execute(reqSQL)
     res = req.fetchone()
@@ -59,7 +58,7 @@ def getHeightUser(user):
 
 
 def getUserInfo(user):
-    reqSQL = "select firstName, lastName,age from Users "
+    reqSQL = "select * from Users "
     reqSQL += "where mail = '" + user + "' "
 
     cur = db.cursor()
@@ -67,7 +66,7 @@ def getUserInfo(user):
     res = req.fetchone()
 
     if res != None:
-        return res[1]
+        return res
     return False
 
 
@@ -124,7 +123,8 @@ def register():
 
     if request.method == "POST":
         if email and passwd:
-            user_db.append({"email": email, "passwd": passwd, "username": username})
+            db.execute(f"insert into Users (lastName,firstName,username,mail,passwd,age) values ('','','{username}','{email}','{passwd}','')")
+            session["user"] = {"email": email, "username": username}
             message = "utilisateur créé"
 
     return render_template("register.html", message=message)
@@ -141,28 +141,32 @@ def logout():
 @app.route("/user", methods=["GET", "POST"])
 def profil():
     error = None
-
-    # TODO : Get from DB
-    username = ""
-    password = ""
-    email = ""
-    age = None
+    currentUser = getUserInfo(session["user"]["email"])
+    lastName = currentUser[1]
+    firstName = currentUser[2]
+    username = currentUser[3]
+    password = currentUser[4]
+    email = currentUser[5]
+    age = currentUser[6]
 
     if request.method == "POST":
 
+        dom_lastName = request.form.get("lastName")
+        dom_firstName = request.form.get("firstName")
         dom_username = request.form.get("username")
         dom_password = request.form.get("password")
         dom_email = request.form.get("email")
         dom_age = request.form.get("age")
 
         if valid_profil(dom_username, dom_password, dom_email, dom_age):
-            session["user"] = dom_email
-            # TODO : Update user row in db
+            db.execute(f"update Users set lastName = '{dom_lastName}',firstName = '{dom_firstName}',username = '{dom_username}', mail = '{dom_email}', passwd = '{dom_password}', age = '{dom_age}' where id = {currentUser[0]}")
+            session["user"] = {"email": dom_email, "username": dom_username}
+
             return redirect("/imc")
         else:
             error = "One of the fields is null"
 
-    return render_template("user-profil.html", username=username, email=password, password=email, age=age, error=error)
+    return render_template("user-profil.html", lastName=lastName, firstName=firstName ,username=username, email=password, password=email, age=age, error=error)
 
 
 def valid_profil(username: str, email: str, password: str, age: str):
@@ -200,7 +204,7 @@ def imc():
 def computeImc(poids, taille):
     return round(poids / ((taille / 100) ** 2), 2)
 
-
+#######################################################################
 # Connect to DB
 db = get_db()
 
@@ -210,10 +214,5 @@ confSQL = open("confSQL.sql", "r")
 # Create tables if needed
 db.executescript(confSQL.read())
 
-# Tests
-# db.execute("insert into Users (lastName,firstName,username,mail,passwd,age) values ('EVIEUX','Vincent','Vincent','vincent@mail.com','motdepasse',25)")
+#Sample pour IMC
 # db.execute("insert into History (height,weight,idUser,date_create) values (177,70.5,1,'2022-03-28')")
-# print(isAccountOK("vincent@mail.com","motdepasse"))
-# print(getWeightUser("vincent@mail.com"))
-# print(getHeightUser("vincent@mail.com"))
-# print(getUserInfo("vincent@mail.com"))
