@@ -223,7 +223,7 @@ def imc(): #computes imc and returns it so it can be shown to users
         imc = round(float(request.form["poids"]) / ((float(request.form["taille"]) / 100.0 )** 2), 2)
         imc_color = "rouge" if imc < 16 or imc >= 26 else "jaune" if imc < 18 else "vert" #colours front
         if session.get('user'):
-            #TODO Sauvegarder les données dans la base de données
-            imc #TODO temporaire sinon le if geule (ne fait rien)
+            db.execute("insert into History (height,weight,idUser) values ("+float(request.form["taille"])+","+float(request.form["poids"])+","+session["user"]["email"]+")")
+            print(getWeightUser("bardinvictor702@mail.com"))
         return render_template('imc.html', imc=imc, imc_color=imc_color) #rendering with result
     return render_template("imc.html")#when GET, render empty form
