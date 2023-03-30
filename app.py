@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request, session, redirect, url_for
+from enum import Enum
 import sqlite3
 
 app = Flask(__name__)
@@ -65,6 +66,19 @@ def getUserInfo(user):
 	db.close()
 	return False
 
+def getAllUsers():
+	db = get_db()
+	reqSQL = f"select * from Users "
+	print(reqSQL)
+	cur = db.cursor()
+	cur.execute(reqSQL)
+	res = cur.fetchall()
+	if res != None:
+		db.close()
+		return res
+	db.close()
+	return False
+
 
 def setDataUser(user, weight, height):
 	db = get_db()
@@ -102,11 +116,8 @@ def updateInfoUser(userID, username, mail, passwd, age, firstName, lastName):
 
 @app.route("/")
 def main_page():
+    print(list(USER_PARAMS))
     return render_template("home.html")
-
-
-# Login
-user_db = []  # Liste de dict : en attendant l'acces à la db
 
 
 @app.route("/login", methods=["POST", "GET"])
@@ -123,22 +134,21 @@ def login():
         session["user"] = None
         connected_user = None
     if request.method == "POST":
-        # vérifier l'existence de l'email dans la db (list of dict)
-        # if (any(email in d['email'] for d in user_db)):
-        for user in user_db:
-            if email == user["email"]:
-                if passwd == user["passwd"]:
+        allUsers = getAllUsers()
+        for user in allUsers:
+            if email == user[USER_PARAMS.EMAIL.value]:
+                if passwd == user[USER_PARAMS.PASSWORD.value]:
                     session["user"] = {"email": email,
-                                       "username": user["username"]}
-                    connected_user = user["username"]
+                                       "username": user[USER_PARAMS.USERNAME.value]}
+                    connected_user = user[USER_PARAMS.USERNAME.value]
                     message = "utilisateur connecté"
                     return redirect("/")
                 else:
                     message = None
                     error = "mauvais mot de passe"
                     break
-        else:
-            error = "mauvais utilisateur/mot de passe"
+            else:
+                error = "mauvais utilisateur/mot de passe"
 
     return render_template("login.html", message=message, error=error, connected_user=connected_user)
 
@@ -174,12 +184,12 @@ def profil():
     error = None
     currentUser = getUserInfo(session["user"]["email"])
 
-    lastName = currentUser[1]
-    firstName = currentUser[2]
-    username = currentUser[3]
-    password = currentUser[4]
-    email = currentUser[5]
-    age = currentUser[6]
+    lastName = currentUser[USER_PARAMS.LAST_NAME.value]
+    firstName = currentUser[USER_PARAMS.FIRST_NAME.value]
+    username = currentUser[USER_PARAMS.USERNAME.value]
+    password = currentUser[USER_PARAMS.PASSWORD.value]
+    email = currentUser[USER_PARAMS.EMAIL.value]
+    age = currentUser[USER_PARAMS.AGE.value]
 
     if request.method == "POST":
 
@@ -225,3 +235,5 @@ def imc():  # computes imc and returns it so it can be shown to users
         # rendering with result
         return render_template('imc.html', imc=imc, imc_color=imc_color)
     return render_template("imc.html")  # when GET, render empty form
+
+USER_PARAMS = Enum('User',['ID','LAST_NAME','FIRST_NAME','USERNAME','EMAIL','PASSWORD','AGE'], start=0)
