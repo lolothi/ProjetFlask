@@ -28,7 +28,7 @@ def isAccountOK(mail,passwd) :
 
 def getWeightsUser(user) :
 	db = get_db()
-	reqSQL = "select weight from History natural join Users where Users.mail = '" + user + "' " 
+	reqSQL = "select weight from History join Users on (History.idUser = Users.id) where Users.mail = '" + user + "' " 
 	cur = db.cursor()
 	req = cur.execute(reqSQL)
 	res = cur.fetchall()
@@ -40,7 +40,7 @@ def getWeightsUser(user) :
 	
 def getHeightsUser(user) :
 	db = get_db()
-	reqSQL = "select height from History natural join Users where Users.mail = '" + user + "' " 
+	reqSQL = "select height from History join Users on (History.idUser = Users.id) where Users.mail = '" + user + "' " 
 	cur = db.cursor()
 	req = cur.execute(reqSQL)
 	res = cur.fetchall()
