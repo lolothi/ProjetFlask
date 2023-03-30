@@ -10,93 +10,88 @@ NAME_DATABASE = "imcpersonnes.db"
 def get_db():
     return sqlite3.connect(NAME_DATABASE, check_same_thread=False)
 
+
 def isAccountOK(mail, passwd):
-	db = get_db()
-	reqSQL = f"select passwd from Users where mail = '{mail}'"
-	cur = db.cursor()
-	cur.execute(reqSQL)
-	res = cur.fetchone()
-	if res != None:
-		if res[0] == passwd:
-			db.close()
-			return True
-		else:
-			db.close()
-			return False
-	db.close()
-	return False
+    db = get_db()
+    reqSQL = f"select username from Users where mail = '{mail}' AND passwd = '{passwd}'"
+    cur = db.cursor()
+    cur.execute(reqSQL)
+    response = cur.fetchone()
+    db.close()
+    return response
 
 
 def getWeightsUser(user):
-	db = get_db()
-	reqSQL = f"select weight from History join Users on (History.idUser = Users.id) where Users.mail = '{user}' "
-	cur = db.cursor()
-	cur.execute(reqSQL)
-	res = cur.fetchall()
-	if res != None:
-		db.close()
-		return res
-	db.close()
-	return False
+    db = get_db()
+    reqSQL = f"select weight from History join Users on (History.idUser = Users.id) where Users.mail = '{user}' "
+    cur = db.cursor()
+    cur.execute(reqSQL)
+    res = cur.fetchall()
+    if res != None:
+        db.close()
+        return res
+    db.close()
+    return False
 
 
 def getHeightsUser(user):
-	db = get_db()
-	reqSQL = f"select height from History join Users on (History.idUser = Users.id) where Users.mail = '{user}' "
-	cur = db.cursor()
-	cur.execute(reqSQL)
-	res = cur.fetchall()
-	if res != None:
-		db.close()
-		return res
-	db.close()
-	return False
+    db = get_db()
+    reqSQL = f"select height from History join Users on (History.idUser = Users.id) where Users.mail = '{user}' "
+    cur = db.cursor()
+    cur.execute(reqSQL)
+    res = cur.fetchall()
+    if res != None:
+        db.close()
+        return res
+    db.close()
+    return False
 
 
 def getUserInfo(user):
-	db = get_db()
-	reqSQL = f"select * from Users where mail = '{user}' "
-	print(reqSQL)
-	cur = db.cursor()
-	cur.execute(reqSQL)
-	res = cur.fetchone()
-	if res != None:
-		db.close()
-		return res
-	db.close()
-	return False
+    db = get_db()
+    reqSQL = f"select * from Users where mail = '{user}' "
+    print(reqSQL)
+    cur = db.cursor()
+    cur.execute(reqSQL)
+    res = cur.fetchone()
+    if res != None:
+        db.close()
+        return res
+    db.close()
+    return False
 
 
 def setDataUser(user, weight, height):
-	db = get_db()
-	reqSQL = f"select id from Users where mail = '{user}';"
-	cur = db.cursor()
-	cur.execute(reqSQL)
-	res = cur.fetchone()
-	idUser = str(res[0])
-	reqSQL = f"insert into History (weight,height,date_create,idUser) values ({weight}, {height}, date(),{idUser})"
-	cur = db.cursor()
-	cur.execute(reqSQL)
-	db.commit()
-	db.close()
+    db = get_db()
+    reqSQL = f"select id from Users where mail = '{user}';"
+    cur = db.cursor()
+    cur.execute(reqSQL)
+    res = cur.fetchone()
+    idUser = str(res[0])
+    reqSQL = f"insert into History (weight,height,date_create,idUser) values ({weight}, {height}, date(),{idUser})"
+    cur = db.cursor()
+    cur.execute(reqSQL)
+    db.commit()
+    db.close()
 
 
 def setInfoUser(username, mail, passwd, age="", firstName="", lastName=""):
-	db = get_db()
-	reqSQL = f"insert into Users (username,mail,passwd,age,firstName,lastName) values ('{username}', '{mail}', '{passwd}', '{age}', '{firstName}', '{lastName}')  "
-	cur = db.cursor()
-	cur.execute(reqSQL)
-	db.commit()
-	db.close()
+    db = get_db()
+    reqSQL = f"insert into Users (username,mail,passwd,age,firstName,lastName) values ('{username}', '{mail}', '{passwd}', '{age}', '{firstName}', '{lastName}')  "
+    cur = db.cursor()
+    cur.execute(reqSQL)
+    db.commit()
+    db.close()
 
 
 def updateInfoUser(userID, username, mail, passwd, age, firstName, lastName):
-	db = get_db()
-	reqSQL = f"update Users set lastName = '{lastName}',firstName = '{firstName}',username = '{username}', mail = '{mail}', passwd = '{passwd}', age = '{age}' where id = {userID}"
-	cur = db.cursor()
-	cur.execute(reqSQL)
-	db.commit()
-	db.close()
+    db = get_db()
+    reqSQL = f"update Users set lastName = '{lastName}',firstName = '{firstName}',username = '{username}', mail = '{mail}', passwd = '{passwd}', age = '{age}' where id = {userID}"
+    cur = db.cursor()
+    cur.execute(reqSQL)
+    db.commit()
+    db.close()
+
 
 # welcome page
 
@@ -107,9 +102,6 @@ def main_page():
 
 
 # Login
-user_db = []  # Liste de dict : en attendant l'acces à la db
-
-
 @app.route("/login", methods=["POST", "GET"])
 def login():
     error = None
@@ -123,21 +115,12 @@ def login():
     except:
         session["user"] = None
         connected_user = None
+
     if request.method == "POST":
-        # vérifier l'existence de l'email dans la db (list of dict)
-        # if (any(email in d['email'] for d in user_db)):
-        for user in user_db:
-            if email == user["email"]:
-                if passwd == user["passwd"]:
-                    session["user"] = {"email": email,
-                                       "username": user["username"]}
-                    connected_user = user["username"]
-                    message = "utilisateur connecté"
-                    return redirect("/imc")
-                else:
-                    message = None
-                    error = "mauvais mot de passe"
-                    break
+        if isAccountOK(email, passwd):
+            username = isAccountOK(email, passwd)[0]
+            session["user"] = {"email": email, "username": username}
+            message = "utilisateur connecté"
         else:
             error = "mauvais utilisateur/mot de passe"
 
@@ -191,15 +174,23 @@ def profil():
         dom_age = request.form.get("age")
 
         if valid_profil(dom_username, dom_password, dom_email, dom_age):
-            updateInfoUser(currentUser[0], dom_username, dom_email,
-                           dom_password, dom_age, dom_firstName, dom_lastName)
+            updateInfoUser(currentUser[0], dom_username, dom_email, dom_password, dom_age, dom_firstName, dom_lastName)
             session["user"] = {"email": dom_email, "username": dom_username}
 
             return redirect("/imc")
         else:
             error = "One of the fields is null"
 
-    return render_template("user-profil.html", lastName=lastName, firstName=firstName, username=username, email=password, password=email, age=age, error=error)
+    return render_template(
+        "user-profil.html",
+        lastName=lastName,
+        firstName=firstName,
+        username=username,
+        email=password,
+        password=email,
+        age=age,
+        error=error,
+    )
 
 
 def valid_profil(username: str, email: str, password: str, age: str):
@@ -218,16 +209,15 @@ confSQL = open("confSQL.sql", "r")
 db.executescript(confSQL.read())
 db.close()
 
+
 @app.route("/imc", methods=["POST", "GET"])
 def imc():  # computes imc and returns it so it can be shown to users
     if request.method == "POST":  # when posting, we compute imc, save it to base then show it to the user
-        imc = round(float(request.form["poids"]) /
-                    ((float(request.form["taille"]) / 100.0) ** 2), 2)
+        imc = round(float(request.form["poids"]) / ((float(request.form["taille"]) / 100.0) ** 2), 2)
         # colours front
         imc_color = "rouge" if imc < 16 or imc >= 26 else "jaune" if imc < 18 else "vert"
-        if session.get('user'):
-            setDataUser(session["user"]["email"], float(
-                request.form["poids"]), float(request.form["taille"]))
+        if session.get("user"):
+            setDataUser(session["user"]["email"], float(request.form["poids"]), float(request.form["taille"]))
         # rendering with result
-        return render_template('imc.html', imc=imc, imc_color=imc_color)
+        return render_template("imc.html", imc=imc, imc_color=imc_color)
     return render_template("imc.html")  # when GET, render empty form
