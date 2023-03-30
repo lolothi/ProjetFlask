@@ -143,7 +143,7 @@ def logout():
 def profil():
     error = None
     currentUser = getUserInfo(session["user"]["email"])
-    username = currentUser[2]
+    username = currentUser[3]
     password = currentUser[4]
     email = currentUser[5]
     age = currentUser[6]
