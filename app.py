@@ -143,6 +143,8 @@ def logout():
 def profil():
     error = None
     currentUser = getUserInfo(session["user"]["email"])
+    lastName = currentUser[1]
+    firstName = currentUser[2]
     username = currentUser[3]
     password = currentUser[4]
     email = currentUser[5]
@@ -150,20 +152,22 @@ def profil():
 
     if request.method == "POST":
 
+        dom_lastName = request.form.get("lastName")
+        dom_firstName = request.form.get("firstName")
         dom_username = request.form.get("username")
         dom_password = request.form.get("password")
         dom_email = request.form.get("email")
         dom_age = request.form.get("age")
 
         if valid_profil(dom_username, dom_password, dom_email, dom_age):
-            db.execute(f"update Users set lastName = '',firstName = '',username = '{dom_username}', mail = '{dom_email}', passwd = '{dom_password}', age = '{dom_age}' where id = {currentUser[0]}")
+            db.execute(f"update Users set lastName = '{dom_lastName}',firstName = '{dom_firstName}',username = '{dom_username}', mail = '{dom_email}', passwd = '{dom_password}', age = '{dom_age}' where id = {currentUser[0]}")
             session["user"] = {"email": dom_email, "username": dom_username}
 
             return redirect("/imc")
         else:
             error = "One of the fields is null"
 
-    return render_template("user-profil.html", username=username, email=password, password=email, age=age, error=error)
+    return render_template("user-profil.html", lastName=lastName, firstName=firstName ,username=username, email=password, password=email, age=age, error=error)
 
 
 def valid_profil(username: str, email: str, password: str, age: str):
