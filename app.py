@@ -217,9 +217,10 @@ db.close()
 # print(getHeightUser("vincent@mail.com"))
 # print(getUserInfo("vincent@mail.com"))
 
+@app.route("/imc", methods=["POST", "GET"])
 def imc(): #computes imc and returns it so it can be shown to users
     if request.method == "POST": #when posting, we compute imc, save it to base then show it to the user
-        imc = round(request.form["poids"] / ((request.form["taille"] / 100.0 )** 2), 2)
+        imc = round(float(request.form["poids"]) / ((float(request.form["taille"]) / 100.0 )** 2), 2)
         imc_color = "rouge" if imc < 16 or imc >= 26 else "jaune" if imc < 18 else "vert" #colours front
         if session.get('user'):
             #TODO Sauvegarder les données dans la base de données
