@@ -2,73 +2,95 @@ from flask import Flask, render_template, request, session, redirect
 import sqlite3
 
 app = Flask(__name__)
-
-NAME_DATABASE = "imcpersonnes.db"
-# Modify PATH to your environment
+NAME_DATABASE = 'imcpersonnes.db'
 PATH = "./"
 app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
 
-
+#Modify PATH to your environment
 def get_db():
-    return sqlite3.connect(NAME_DATABASE, check_same_thread=False)
+    return sqlite3.connect(NAME_DATABASE, check_same_thread=False)	
 
+def isAccountOK(mail,passwd) :
+	db = get_db()
+	reqSQL = f"select passwd from Users where mail = '{mail}'"
+	cur = db.cursor()
+	cur.execute(reqSQL)
+	res = cur.fetchone()
+	if res != None :
+		if res[0] == passwd :
+			db.close()
+			return True
+		else :
+			db.close()
+			return False
+	db.close()
+	return False
 
-def isAccountOK(mail, passwd):
-    reqSQL = f"select passwd from Users where mail = {mail}"
-    
-    cur = db.cursor()
-    req = cur.execute(reqSQL)
-    res = req.fetchone()
-
-    if res != None:
-        if res[0] == passwd:
-            return True
-        else:
-            return False
-    return False
-
-
-def getWeightUser(user):
-    reqSQL = "select max(History.id), weight from History "
-    reqSQL += "natural join Users "
-    reqSQL += "where mail = '" + user + "' "
-    reqSQL += "group by weight "
-
-    cur = db.cursor()
-    req = cur.execute(reqSQL)
-    res = req.fetchone()
-
-    if res != None:
-        return res[1]
-    return False
-
-
-def getHeightUser(user):
-    reqSQL = "select max(History.id), height from History "
-    reqSQL += "natural join Users "
-    reqSQL += "where mail = '" + user + "' "
-    reqSQL += "group by height "
-    cur = db.cursor()
-    req = cur.execute(reqSQL)
-    res = req.fetchone()
-
-    if res != None:
-        return res[1]
-    return False
-
-
-def getUserInfo(user):
-    reqSQL = "select * from Users "
-    reqSQL += "where mail = '" + user + "' "
-
-    cur = db.cursor()
-    req = cur.execute(reqSQL)
-    res = req.fetchone()
-
-    if res != None:
-        return res
-    return False
-
+def getWeightsUser(user) :
+	db = get_db()
+	reqSQL = f"select weight from History join Users on (History.idUser = Users.id) where Users.mail = '{user}' "
+	cur = db.cursor()
+	cur.execute(reqSQL)
+	res = cur.fetchall()
+	if res != None :
+		db.close()
+		return res		
+	db.close()
+	return False
+	
+def getHeightsUser(user) :
+	db = get_db()
+	reqSQL = f"select height from History join Users on (History.idUser = Users.id) where Users.mail = '{user}' " 
+	cur = db.cursor()
+	cur.execute(reqSQL)
+	res = cur.fetchall()
+	if res != None :
+		db.close()
+		return res		
+	db.close()
+	return False
+	
+def getUserInfo(user) :
+	db = get_db()
+	reqSQL = f"select * from Users where mail = '{user}' " 
+	print(reqSQL)
+	cur = db.cursor()
+	cur.execute(reqSQL)
+	res = cur.fetchone()
+	if res != None :
+		db.close()
+		return res
+	db.close()		
+	return False
+		
+def setDataUser(user,weight,height) :
+	db = get_db()
+	reqSQL = f"select id from Users where mail = '{user}';"
+	cur = db.cursor()
+	cur.execute(reqSQL)
+	res = cur.fetchone()
+	idUser = str(res[0])
+	reqSQL = f"insert into History (weight,height,date_create,idUser) values ({weight}, {height}, date(),{idUser})"
+	cur = db.cursor()
+	cur.execute(reqSQL)
+	db.commit()
+	db.close()
+	
+def setInfoUser(username,mail,passwd,age="",firstName="",lastName="") :
+	db = get_db()
+	reqSQL = f"insert into Users (username,mail,passwd,age,firstName,lastName) values ('{username}', '{mail}', '{passwd}', '{age}', '{firstName}', '{lastName}')  "
+	cur = db.cursor()	
+	cur.execute(reqSQL)
+	db.commit()
+	db.close()
+        
+def updateInfoUser(userID,username,mail,passwd,age,firstName,lastName) :
+	db = get_db()
+	reqSQL = f"update Users set lastName = '{lastName}',firstName = '{firstName}',username = '{username}', mail = '{mail}', passwd = '{passwd}', age = '{age}' where id = {userID}"
+	cur = db.cursor()	
+	cur.execute(reqSQL)
+	db.commit()
+	db.close()
 
 # welcome page
 @app.route("/")
@@ -123,7 +145,7 @@ def register():
 
     if request.method == "POST":
         if email and passwd:
-            db.execute(f"insert into Users (lastName,firstName,username,mail,passwd,age) values ('','','{username}','{email}','{passwd}','')")
+            setInfoUser(username,email,passwd)
             session["user"] = {"email": email, "username": username}
             message = "utilisateur créé"
 
@@ -142,6 +164,7 @@ def logout():
 def profil():
     error = None
     currentUser = getUserInfo(session["user"]["email"])
+    
     lastName = currentUser[1]
     firstName = currentUser[2]
     username = currentUser[3]
@@ -159,7 +182,7 @@ def profil():
         dom_age = request.form.get("age")
 
         if valid_profil(dom_username, dom_password, dom_email, dom_age):
-            db.execute(f"update Users set lastName = '{dom_lastName}',firstName = '{dom_firstName}',username = '{dom_username}', mail = '{dom_email}', passwd = '{dom_password}', age = '{dom_age}' where id = {currentUser[0]}")
+            updateInfoUser(currentUser[0],dom_username,dom_email,dom_password,dom_age,dom_firstName,dom_lastName)
             session["user"] = {"email": dom_email, "username": dom_username}
 
             return redirect("/imc")
@@ -213,6 +236,37 @@ confSQL = open("confSQL.sql", "r")
 
 # Create tables if needed
 db.executescript(confSQL.read())
+db.close()
 
 #Sample pour IMC
 # db.execute("insert into History (height,weight,idUser,date_create) values (177,70.5,1,'2022-03-28')")
+   
+#Tests
+
+#setInfoUser("vincent","vincent@mail.com", "motdepasse", "25", "Vincent", "EVIEUX") #User with full infos
+#setInfoUser("laurent","laurent@mail.com", "motdepasselaurent") #User with partial infos 
+#print("Test User OK : ")
+#print(isAccountOK("vincent@mail.com","motdepasse"))
+#print(isAccountOK("laurent@mail.com","motdepasselaurent"))
+#print("Test insert BDD :")
+#setDataUser("vincent@mail.com", "70.5","177")
+#setDataUser("laurent@mail.com","75","180")
+#setDataUser("vincent@mail.com", "71.5","177")
+#setDataUser("laurent@mail.com","76","180")
+#setDataUser("vincent@mail.com", "72.5","177")
+#setDataUser("laurent@mail.com","77","180")
+#print("Test1 get infos from BDD")
+#print(getWeightsUser("vincent@mail.com"))
+#print(getHeightsUser("vincent@mail.com"))
+#print("Test1 get infos from BDD")
+#print(getWeightsUser("laurent@mail.com"))
+#print(getHeightsUser("laurent@mail.com"))
+#db = get_db()
+#cur = db.cursor()
+#print("All users")
+#req = cur.execute("select * from Users")
+#res = req.fetchall()
+#print(res)
+#db.close()
+#print(getUserInfo("vincent@mail.com"))
+#print(getUserInfo("laurent@mail.com"))
