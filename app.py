@@ -84,8 +84,6 @@ def setInfoUser(username,mail,passwd,age="Null",firstName="Null",lastName="Null"
 	req = cur.execute(reqSQL)
 	db.commit()
 	db.close()
-		
-# html = "index.html"
 
 # welcome page
 @app.route("/")
@@ -211,7 +209,7 @@ def imc():
 
 def computeImc(poids, taille):
     return round(poids / ((taille / 100) ** 2) , 2)
-    
+
 # Connect to DB
 db = get_db()
 
@@ -246,11 +244,3 @@ print(res)
 db.close()
 print(getUserInfo("vincent@mail.com"))
 print(getUserInfo("laurent@mail.com"))
-
-
-
-
-
-
-
-
