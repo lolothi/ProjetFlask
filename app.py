@@ -29,10 +29,7 @@ def isAccountOK(mail, passwd):
 
 
 def getWeightUser(user):
-    reqSQL = "select max(History.id), weight from History "
-    reqSQL += "natural join Users "
-    reqSQL += "where mail = '" + user + "' "
-    reqSQL += "group by weight "
+    reqSQL = f"select max(History.id), weight from History natural join Users where mail = '{user}' group by weight "
 
     cur = db.cursor()
     req = cur.execute(reqSQL)
@@ -44,10 +41,7 @@ def getWeightUser(user):
 
 
 def getHeightUser(user):
-    reqSQL = "select max(History.id), height from History "
-    reqSQL += "natural join Users "
-    reqSQL += "where mail = '" + user + "' "
-    reqSQL += "group by height "
+    reqSQL = f"select max(History.id), height from History natural join Users where mail = '{user}' group by height "
     cur = db.cursor()
     req = cur.execute(reqSQL)
     res = req.fetchone()
@@ -58,8 +52,7 @@ def getHeightUser(user):
 
 
 def getUserInfo(user):
-    reqSQL = "select * from Users "
-    reqSQL += "where mail = '" + user + "' "
+    reqSQL = f"select * from Users where mail = '{user}' "
 
     cur = db.cursor()
     req = cur.execute(reqSQL)
