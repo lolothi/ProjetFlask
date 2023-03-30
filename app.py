@@ -15,7 +15,7 @@ def isAccountOK(mail,passwd) :
 	reqSQL = "select passwd from Users where mail = '" + mail + "'"
 	cur = db.cursor()
 	req = cur.execute(reqSQL)
-	res = req.fetchone()
+	res = cur.fetchone()
 	if res != None :
 		if res[0] == passwd :
 			db.close()
@@ -28,48 +28,47 @@ def isAccountOK(mail,passwd) :
 
 def getWeightsUser(user) :
 	db = get_db()
-	reqSQL = "select weight from History natural join Users where mail = '" + user + "' " 
+	reqSQL = "select weight from History natural join Users where Users.mail = '" + user + "' " 
 	cur = db.cursor()
 	req = cur.execute(reqSQL)
-	res = req.fetchone()
+	res = cur.fetchall()
 	if res != None :
 		db.close()
-		return res[0]		
+		return res		
 	db.close()
 	return False
 	
 def getHeightsUser(user) :
 	db = get_db()
-	reqSQL = "select height from History natural join Users where mail = '" + user + "' " 
+	reqSQL = "select height from History natural join Users where Users.mail = '" + user + "' " 
 	cur = db.cursor()
 	req = cur.execute(reqSQL)
-	res = req.fetchone()
+	res = cur.fetchall()
 	if res != None :
-		db.close()	
-		return res[0]		
+		db.close()
+		return res		
 	db.close()
 	return False
 	
 def getUserInfo(user) :
 	db = get_db()
-	reqSQL = "select firstName, lastName, age, mail, username from Users where mail = '" + user + "' " 
+	reqSQL = "select * from Users where mail = '" + user + "' " 
 	print(reqSQL)
 	cur = db.cursor()
 	req = cur.execute(reqSQL)
-	res = req.fetchall()
-	print(res)
+	res = cur.fetchall()
 	if res != None :
 		db.close()
 		return res
 	db.close()		
 	return False
-	
+		
 def setDataUser(user,weight,height) :
 	db = get_db()
 	reqSQL = "select id from Users where mail = '" + user + "';"
 	cur = db.cursor()
 	req = cur.execute(reqSQL)
-	res = req.fetchone()
+	res = cur.fetchone()
 	idUser = str(res[0])
 	reqSQL = "insert into History (weight,height,date_create,idUser) values (" + weight + ", "+ height + ", date()," + idUser + ")"
 	cur = db.cursor()
@@ -231,6 +230,10 @@ print(isAccountOK("laurent@mail.com","motdepasselaurent"))
 print("Test insert BDD :")
 setDataUser("vincent@mail.com", "70.5","177")
 setDataUser("laurent@mail.com","75","180")
+setDataUser("vincent@mail.com", "71.5","177")
+setDataUser("laurent@mail.com","76","180")
+setDataUser("vincent@mail.com", "72.5","177")
+setDataUser("laurent@mail.com","77","180")
 print("Test1 get infos from BDD")
 print(getWeightsUser("vincent@mail.com"))
 print(getHeightsUser("vincent@mail.com"))
