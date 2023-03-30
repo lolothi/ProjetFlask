@@ -2,7 +2,7 @@
     color:  darkgoldenrod;
 }
 
-.error {
+.errorAuth {
     color: red;
 }
 
@@ -130,8 +130,9 @@ form {
 #submitBtn:hover {
     background-color: #404040;
 }
-.error{
+.errorProfil{
     max-width: 600px;
     margin: 0 auto;
     padding: 30px;
+    color: red;
 }
