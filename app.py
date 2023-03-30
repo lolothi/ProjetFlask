@@ -14,8 +14,7 @@ def get_db():
 
 
 def isAccountOK(mail, passwd):
-    reqSQL = "select passwd from Users where mail = "
-    reqSQL += "'" + mail + "'"
+    reqSQL = f"select passwd from Users where mail = {mail}"
     
     cur = db.cursor()
     req = cur.execute(reqSQL)
