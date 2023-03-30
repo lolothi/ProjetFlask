@@ -1,81 +1,22 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>FlaskApp</title>
-    <style>
-		body{
-			font-family: Arial, sans-serif;
-			margin: 0;
-			padding: 0;
-			background-color: #151414;
-			color: #fff;
-		}
-		form {
-			max-width: 600px;
-			margin: 0 auto;
-			padding: 30px;
-			background-color: #292929;
-			border-radius: 5px;
-			box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-            color: #ff8c00;
-		}
-        .title_user_profil{
-            max-width: 600px;
-			margin: 0 auto;
-			padding: 30px;
-            color: #ff8c00;
-        }
-		.inputs {
-			width: 95%;
-			padding: 10px;
-			border: none;
-			border-radius: 5px;
-			box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
-			background-color: #414141;
-			color: #fff;
-		}
-        .label{
-			display: block;
-			margin-bottom: 10px;
-			color: #ff8c00;
-		}
-		#submitBtn{
-			display: block;
-			margin-top: 20px;
-			padding: 10px 20px;
-			border: none;
-			border-radius: 5px;
-			background-color: #ff8c00;
-			color: #fff;
-			font-size: 16px;
-			cursor: pointer;
-			box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
-		}
-		#submitBtn:hover {
-			background-color: #404040;
-		}
-		.result {
-			font-family: Arial, sans-serif;
-			background-color: #282828;
-			border-radius: 5px;
-			color: #fff;
-			margin: 2rem auto;
-			max-width: 500px;
-			padding: 1rem;
-			text-align: center;
-		}
-        .error{
-            max-width: 600px;
-			margin: 0 auto;
-			padding: 30px;
-        }
-	</style>
-</head>
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}User profil{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
 <body>
     <h1 class="title_user_profil">{{ username }}</h1>
     <h3 class="title_user_profil">Account</h3>
     <form method="post">
+		<div class="label">First name : </div>
+        <input type="text" name="firstName" value="{{ firstName }}" class="inputs">
+        <br>
+        <br>
+		<div class="label">Last name : </div>
+        <input type="text" name="lastName" value="{{ lastName }}" class="inputs">
+        <br>
+        <br>
         <div class="label">Username : </div>
         <input type="text" name="username" value="{{ username }}" class="inputs">
         <br>
@@ -95,7 +36,7 @@
         <input type="submit" value="Submit" id="submitBtn">
     </form>
     {% if error != None %}
-    <p style="color: red;" class="error">*{{error}}</p>
+    <p class="errorProfil">*{{error}}</p>
     {% endif %}
 </body>
-</html>
+{% endblock %}
