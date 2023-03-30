@@ -201,7 +201,7 @@ def imc():
 def computeImc(poids, taille):
     return round(poids / ((taille / 100) ** 2), 2)
 
-
+#######################################################################
 # Connect to DB
 db = get_db()
 
