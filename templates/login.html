@@ -5,13 +5,14 @@
 {% endblock %}
 
 {% block content %}
+  <button type="button" id="retour" onclick="window.location.href=`{{ url_for('main_page') }}`">Return</button>
   <form method="post">
     <label for="email">Email</label>
-    <input type="email" name="email" id="email" required>
+    <input type="email" name="email" id="email" class="inputs" required>
     <label for="passwd">Password</label>
-    <input type="password" name="passwd" id="passwd" required>
-    <input type="submit" value="Log In">
-    <a href="{{ url_for('register') }}">Register</a>
+    <input type="password" name="passwd" id="passwd" class="inputs" required>
+    <input type="submit" id="submitBtn" value="Log In">
+    <a href="{{ url_for('register') }}" class="authSwitch">Register</a>
     <br/>
     {% if message %}
         <a class="message">{{message}}</a>
