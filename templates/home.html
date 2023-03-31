@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  {% if session['user'] %}
+    <h1>Welcome {{session['user']['username']}} !</h1>
+  {% else %}
+    <h1>Welcome !</h1>
+  {% endif %}
+{% endblock %}
+
+{% block content %}
+<body>
+  <button type="button" id="imcButton" onclick="window.location.href=`{{ url_for('imc') }}`">BMI calculator</button>
+</body>
+{% endblock %}

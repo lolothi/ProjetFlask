@@ -5,15 +5,16 @@
 {% endblock %}
 
 {% block content %}
+  <button type="button" id="retour" onclick="window.location.href=`{{ url_for('main_page') }}`">Return</button>
   <form method="post" enctype="multipart/form-data">
     <label for="email">Email</label>
-    <input name="email" id="email" required>
-    <label for="username">identifiant</label>
-    <input name="username" id="username" required>
-    <label for="passwd">Mot de passe</label>
-    <input type="password" name="passwd" id="passwd" required>
-    <input type="submit" value="Register">
-    <a href="{{ url_for('login') }}">login</a>
+    <input type="email" name="email" id="email" class="inputs" required>
+    <label for="username">Username</label>
+    <input name="username" id="username" class="inputs" required>
+    <label for="passwd">Password</label>
+    <input type="password" name="passwd" id="passwd" class="inputs" required>
+    <input type="submit" id="submitBtn" value="Register">
+    <a href="{{ url_for('login') }}" class="authSwitch">Login</a>
     <br/>    
     {% if error %}
     <p class="errorAuth">{{error}}</p>
