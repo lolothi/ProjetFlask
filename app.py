@@ -33,7 +33,7 @@ def getWeightsUser(user):
 	cur = db.cursor()
 	cur.execute(reqSQL)
 	res = cur.fetchall()
-	if res != None:
+	if res:
 		db.close()
 		return res
 	db.close()
@@ -46,7 +46,7 @@ def getHeightsUser(user):
 	cur = db.cursor()
 	cur.execute(reqSQL)
 	res = cur.fetchall()
-	if res != None:
+	if res:
 		db.close()
 		return res
 	db.close()
@@ -60,20 +60,7 @@ def getUserInfo(user):
 	cur = db.cursor()
 	cur.execute(reqSQL)
 	res = cur.fetchone()
-	if res != None:
-		db.close()
-		return res
-	db.close()
-	return False
-
-def getAllUsers():
-	db = get_db()
-	reqSQL = f"select * from Users "
-	print(reqSQL)
-	cur = db.cursor()
-	cur.execute(reqSQL)
-	res = cur.fetchall()
-	if res != None:
+	if res:
 		db.close()
 		return res
 	db.close()
@@ -113,6 +100,8 @@ def updateInfoUser(userID, username, mail, passwd, age, firstName, lastName):
 
 # welcome page
 
+# Login
+user_db = []  # Liste de dict : en attendant l'acces à la db
 
 @app.route("/")
 def main_page():
@@ -133,21 +122,20 @@ def login():
         session["user"] = None
         connected_user = None
     if request.method == "POST":
-        allUsers = getAllUsers()
-        for user in allUsers:
-            if email == user[USER_PARAMS.EMAIL.value]:
-                if passwd == user[USER_PARAMS.PASSWORD.value]:
+        for user in user_db:
+            if email == user["email"]:
+                if passwd == user["passwd"]:
                     session["user"] = {"email": email,
-                                       "username": user[USER_PARAMS.USERNAME.value]}
-                    connected_user = user[USER_PARAMS.USERNAME.value]
+                                       "username": user["username"]}
+                    connected_user = user["username"]
                     message = "utilisateur connecté"
-                    return redirect("/")
+                    return redirect("/imc")
                 else:
                     message = None
                     error = "mauvais mot de passe"
                     break
-            else:
-                error = "mauvais utilisateur/mot de passe"
+        else:
+            error = "mauvais utilisateur/mot de passe"
 
     return render_template("login.html", message=message, error=error, connected_user=connected_user)
 
