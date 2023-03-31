@@ -25,4 +25,25 @@
 		</form>
 	<button type="button" id="retour" onclick="window.location.href=`{{ url_for('main_page') }}`">Return</button>
 </body>
+{%if history%}
+	<h1>History</h1>
+	<table class="styled-table">
+		<thead>
+			<tr>
+				<th>Date</th>
+				<th>Weight</th>
+				<th>Height</th>
+				<th>BMI</th>
+			</tr>
+		</thead>
+		{%for line in history%}
+		<tbody>
+			<td class="history_line">{{line[2]}}</td>
+			<td class="history_line">{{line[0]}} cm</td>
+			<td class="history_line">{{line[1]}} kg</td>
+			<td class="history_line">{{imcList[history.index(line)]}}</td>
+		</tbody>
+		{%endfor%}
+	</table>
+{%endif%}
 {% endblock %}

@@ -22,9 +22,9 @@ def isAccountOK(mail, passwd):
     if response:
         return True
 
-def getWeightsUser(user):
+def getIMCInfoUser(user):
 	db = get_db()
-	reqSQL = f"select weight from History join Users on (History.idUser = Users.id) where Users.mail = '{user}' "
+	reqSQL = f"select height,weight,date_create from History join Users on (History.idUser = Users.id) where Users.mail = '{user}' "
 	cur = db.cursor()
 	cur.execute(reqSQL)
 	res = cur.fetchall()
@@ -32,20 +32,6 @@ def getWeightsUser(user):
 		db.close()
 		return res
 	db.close()
-	return False
-
-
-def getHeightsUser(user):
-	db = get_db()
-	reqSQL = f"select height from History join Users on (History.idUser = Users.id) where Users.mail = '{user}' "
-	cur = db.cursor()
-	cur.execute(reqSQL)
-	res = cur.fetchall()
-	if res:
-		db.close()
-		return res
-	db.close()
-	return False
 
 
 def getUserInfo(user):
@@ -93,14 +79,10 @@ def updateInfoUser(userID, username, mail, passwd, age, firstName, lastName):
     db.commit()
     db.close()
 
-
-# welcome page
-
-# Login
-user_db = []  # Liste de dict : en attendant l'acces à la db
-
 @app.route("/")
 def main_page():
+    if session.get('user'):
+        return render_template("home.html",history=imcHistory()[0],imcList=imcHistory()[1])
     return render_template("home.html")
 
 
@@ -145,6 +127,7 @@ def register():
                 setInfoUser(username, email, passwd)
                 session["user"] = {"email": email, "username": username}
                 message = "utilisateur créé"
+                return redirect("/")
             except:
                 error = "Erreur dans la création de l'utilisateur"
 
@@ -206,13 +189,29 @@ db.close()
 @app.route("/imc", methods=["POST", "GET"])
 def imc():  # computes imc and returns it so it can be shown to users
     if request.method == "POST":  # when posting, we compute imc, save it to base then show it to the user
-        imc = round(float(request.form["poids"]) / ((float(request.form["taille"]) / 100.0) ** 2), 2)
+        imc = compute_imc(float(request.form["poids"]),float(request.form["taille"]))
         # colours front
         imc_color = "rouge" if imc < 16 or imc >= 26 else "jaune" if imc < 18 else "vert"
-        if session.get("user"):
-            setDataUser(session["user"]["email"], float(request.form["poids"]), float(request.form["taille"]))
-        # rendering with result
-        return render_template("imc.html", imc=imc, imc_color=imc_color)
-    return render_template("imc.html")  # when GET, render empty form
+        if session.get('user'):
+            setDataUser(session["user"]["email"], float(
+                request.form["poids"]), float(request.form["taille"]))
+            # rendering with result and with user
+            return render_template('imc.html', imc=imc, imc_color=imc_color,history=imcHistory()[0],imcList=imcHistory()[1])
+        # rendering with result and without user
+        return render_template('imc.html', imc=imc, imc_color=imc_color)
+    if session.get('user'):
+        return render_template("imc.html",history=imcHistory()[0],imcList=imcHistory()[1])  # when GET, render empty form
+    return render_template("imc.html")
+
+def compute_imc(weight,height):
+    return round(weight / ((height / 100.0) ** 2), 2)
+
+def imcHistory():
+    imcList = list()
+    history = getIMCInfoUser(session["user"]["email"])
+    if history:
+        for line in history:
+            imcList.append(compute_imc(line[1],line[0]))
+    return (history,imcList)
 
 USER_PARAMS = Enum('User',['ID','LAST_NAME','FIRST_NAME','USERNAME','EMAIL','PASSWORD','AGE'], start=0)
