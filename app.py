@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request, session, redirect, url_for
+from enum import Enum
 import sqlite3
 
 app = Flask(__name__)
@@ -32,7 +33,7 @@ def getWeightsUser(user):
 	cur = db.cursor()
 	cur.execute(reqSQL)
 	res = cur.fetchall()
-	if res != None:
+	if res:
 		db.close()
 		return res
 	db.close()
@@ -45,7 +46,7 @@ def getHeightsUser(user):
 	cur = db.cursor()
 	cur.execute(reqSQL)
 	res = cur.fetchall()
-	if res != None:
+	if res:
 		db.close()
 		return res
 	db.close()
@@ -59,7 +60,7 @@ def getUserInfo(user):
 	cur = db.cursor()
 	cur.execute(reqSQL)
 	res = cur.fetchone()
-	if res != None:
+	if res:
 		db.close()
 		return res
 	db.close()
@@ -99,14 +100,12 @@ def updateInfoUser(userID, username, mail, passwd, age, firstName, lastName):
 
 # welcome page
 
+# Login
+user_db = []  # Liste de dict : en attendant l'acces à la db
 
 @app.route("/")
 def main_page():
-    return render_template("index.html")
-
-
-# Login
-user_db = []  # Liste de dict : en attendant l'acces à la db
+    return render_template("home.html")
 
 
 @app.route("/login", methods=["POST", "GET"])
@@ -123,8 +122,6 @@ def login():
         session["user"] = None
         connected_user = None
     if request.method == "POST":
-        # vérifier l'existence de l'email dans la db (list of dict)
-        # if (any(email in d['email'] for d in user_db)):
         for user in user_db:
             if email == user["email"]:
                 if passwd == user["passwd"]:
@@ -156,6 +153,7 @@ def register():
             setInfoUser(username, email, passwd)
             session["user"] = {"email": email, "username": username}
             message = "utilisateur créé"
+            return redirect("/")
 
     return render_template("register.html", message=message)
 
@@ -173,12 +171,12 @@ def profil():
     error = None
     currentUser = getUserInfo(session["user"]["email"])
 
-    lastName = currentUser[1]
-    firstName = currentUser[2]
-    username = currentUser[3]
-    password = currentUser[4]
-    email = currentUser[5]
-    age = currentUser[6]
+    lastName = currentUser[USER_PARAMS.LAST_NAME.value]
+    firstName = currentUser[USER_PARAMS.FIRST_NAME.value]
+    username = currentUser[USER_PARAMS.USERNAME.value]
+    password = currentUser[USER_PARAMS.PASSWORD.value]
+    email = currentUser[USER_PARAMS.EMAIL.value]
+    age = currentUser[USER_PARAMS.AGE.value]
 
     if request.method == "POST":
 
@@ -189,23 +187,17 @@ def profil():
         dom_email = request.form.get("email")
         dom_age = request.form.get("age")
 
-        if valid_profil(dom_username, dom_password, dom_email, dom_age):
+        if len(dom_username) > 0 and len(dom_email) > 0 and len(dom_password) > 0 :
             updateInfoUser(currentUser[0], dom_username, dom_email,
                            dom_password, dom_age, dom_firstName, dom_lastName)
             session["user"] = {"email": dom_email, "username": dom_username}
 
-            return redirect("/imc")
+            return redirect("/")
         else:
-            error = "One of the fields is null"
+            error = "One of the required fields is null"
 
-    return render_template("user-profil.html", lastName=lastName, firstName=firstName, username=username, email=password, password=email, age=age, error=error)
-
-
-def valid_profil(username: str, email: str, password: str, age: str):
-    if len(username) == 0 or len(email) == 0 or len(password) == 0 or len(age) == 0:
-        return False
-    return True
-
+    return render_template("user-profil.html", lastName=lastName, firstName=firstName, 
+                           username=username, email=password, password=email, age=age, error=error)
 
 # Connect to DB
 db = get_db()
@@ -230,3 +222,5 @@ def imc():  # computes imc and returns it so it can be shown to users
         # rendering with result
         return render_template('imc.html', imc=imc, imc_color=imc_color)
     return render_template("imc.html")  # when GET, render empty form
+
+USER_PARAMS = Enum('User',['ID','LAST_NAME','FIRST_NAME','USERNAME','EMAIL','PASSWORD','AGE'], start=0)
