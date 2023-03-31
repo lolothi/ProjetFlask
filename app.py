@@ -173,7 +173,7 @@ def profil():
             error = "One of the required fields is null"
 
     return render_template("user-profil.html", lastName=lastName, firstName=firstName, 
-                           username=username, email=password, password=email, age=age, error=error)
+                           username=username, email=email, password=password, age=age, error=error)
 
 # Connect to DB
 db = get_db()
