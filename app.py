@@ -227,6 +227,8 @@ def imc():  # computes imc and returns it so it can be shown to users
         if session.get('user'):
             setDataUser(session["user"]["email"], float(
                 request.form["poids"]), float(request.form["taille"]))
-        # rendering with result
+            # rendering with result and with user
+            return render_template('imc.html', imc=imc, imc_color=imc_color,history="userHistory")
+        # rendering with result and without user
         return render_template('imc.html', imc=imc, imc_color=imc_color)
     return render_template("imc.html")  # when GET, render empty form

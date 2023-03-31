@@ -25,4 +25,9 @@
 		</form>
 	<button type="button" id="retour" onclick="window.location.href=`{{ url_for('main_page') }}`">Retour</button>
 </body>
+<div>
+	{%for line in history%}
+		<div class="history_line">{{line}}</div>
+	{%endfor%}   
+</div>
 {% endblock %}
