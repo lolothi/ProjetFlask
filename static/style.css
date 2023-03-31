@@ -35,10 +35,11 @@ form {
 label {
     display: block;
     margin-bottom: 10px;
+    margin-top: 10px;
     color: #ff8c00;
 }
 #poids,#taille {
-    width: 100%;
+    width: 95%;
     padding: 10px;
     border: none;
     border-radius: 5px;
@@ -136,6 +137,7 @@ form {
     padding: 30px;
     color: red;
 }
+<<<<<<< HEAD
 
 #retour {
     position: absolute;
@@ -220,3 +222,18 @@ button:hover {
 #resultat.rouge {
     color: #FF0000;
 }
+=======
+/*************** HOME **************/
+#imcButton{
+    display: block;
+    margin: 0 auto;
+    margin-top: 10%;
+}
+
+/*************** HOME **************/
+.authSwitch{
+    display: block;
+    margin-top: 1%;
+    margin-bottom: -3%;
+}
+>>>>>>> develop
