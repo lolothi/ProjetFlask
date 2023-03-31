@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block content %}
-  <button type="button" id="retour" onclick="window.location.href=`{{ url_for('main_page') }}`">Return</button>
+  <button type="button" id="return" onclick="window.location.href=`{{ url_for('main_page') }}`">Return</button>
   <form method="post" enctype="multipart/form-data">
     <label for="email">Email</label>
     <input type="email" name="email" id="email" class="inputs" required>

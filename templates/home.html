@@ -10,7 +10,7 @@
 
 {% block content %}
 <body>
-  <button type="button" id="imcButton" onclick="window.location.href=`{{ url_for('imc') }}`">BMI calculator</button>
+  <button type="button" id="BMIButton" onclick="window.location.href=`{{ url_for('BMI') }}`">BMI calculator</button>
   {%if history%}
     <h1>History</h1>
     <table class="styled-table">
@@ -27,7 +27,7 @@
         <td class="history_line">{{line[2]}}</td>
         <td class="history_line">{{line[0]}} cm</td>
         <td class="history_line">{{line[1]}} kg</td>
-        <td class="history_line">{{imcList[history.index(line)]}}</td>
+        <td class="history_line">{{BMIList[history.index(line)]}}</td>
       </tbody>
       {%endfor%}
     </table>
