@@ -6,7 +6,7 @@
     color: red;
 }
 
-#retour {
+#return {
     position: absolute;
     top: 10px;
     left: 10px;
@@ -38,7 +38,7 @@ label {
     margin-top: 10px;
     color: #ff8c00;
 }
-#poids,#taille {
+#weight,#height {
     width: 95%;
     padding: 10px;
     border: none;
@@ -73,21 +73,21 @@ button:hover {
     padding: 1rem;
     text-align: center;
 }
-#resultat {
+#resultBMI {
     font-size: 2em;
     margin-top: 20px;
     text-align: center;
 }
 
-#resultat.vert {
+#resultBMI.green {
     color: #00FF00;
 }
 
-#resultat.jaune {
+#resultBMI.yellow {
     color: #FFFF00;
 }
 
-#resultat.rouge {
+#resultBMI.red {
     color: #FF0000;
 }
 
@@ -138,7 +138,7 @@ form {
     color: red;
 }
 /*************** HOME **************/
-#imcButton{
+#BMIButton{
     display: block;
     margin: 0 auto;
     margin-top: 10%;

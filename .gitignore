@@ -1,6 +1,6 @@
 #DB
-imcpersonnes.db
-imcpersonnes.db-journal
+BMIDatabase.db
+BMIDatabase.db-journal
 
 ### Flask ###
 instance/*

@@ -1,6 +1,8 @@
 # ProjetFlask
-Projet Flask en groupe
+Projet Flask en groupe: EVIEUX Vincent, THILLOU Laurent, BARDIN Victor, FAUCHERY Benoît
 
+# Lien git
+https://github.com/lolothi/ProjetFlask
 
 # Installation local use
 On your computer:
