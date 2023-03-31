@@ -18,8 +18,8 @@ def isAccountOK(mail, passwd):
     cur.execute(reqSQL)
     response = cur.fetchone()
     db.close()
-    return response
-
+    if response:
+        return True
 
 def getWeightsUser(user):
     db = get_db()
@@ -118,7 +118,8 @@ def login():
 
     if request.method == "POST":
         if isAccountOK(email, passwd):
-            username = isAccountOK(email, passwd)[0]
+            username = getUserInfo(email)[3]
+            print('username', username)
             session["user"] = {"email": email, "username": username}
             message = "utilisateur connecté"
         else:
@@ -131,17 +132,21 @@ def login():
 @app.route("/register", methods=["POST", "GET"])
 def register():
     message = None
+    error = None
     email = request.form.get("email")
     passwd = request.form.get("passwd")
     username = request.form.get("username")
 
     if request.method == "POST":
         if email and passwd:
-            setInfoUser(username, email, passwd)
-            session["user"] = {"email": email, "username": username}
-            message = "utilisateur créé"
+            try:
+                setInfoUser(username, email, passwd)
+                session["user"] = {"email": email, "username": username}
+                message = "utilisateur créé"
+            except:
+                error = "Erreur dans la création de l'utilisateur"
 
-    return render_template("register.html", message=message)
+    return render_template("register.html", error=error, message=message)
 
 
 # Logout user if connected
