@@ -120,10 +120,10 @@ def login():
 
     if request.method == "POST":
         if isAccountOK(email, passwd):
-            username = getUserInfo(email)[3]
-            print('username', username)
+            username = getUserInfo(email)[USER_PARAMS.USERNAME.value]
             session["user"] = {"email": email, "username": username}
             message = "utilisateur connecté"
+            return redirect("/")
         else:
             error = "mauvais utilisateur/mot de passe"
 
