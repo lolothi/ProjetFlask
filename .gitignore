@@ -1,3 +1,7 @@
+#DB
+BMIDatabase.db
+BMIDatabase.db-journal
+
 ### Flask ###
 instance/*
 !instance/.gitignore

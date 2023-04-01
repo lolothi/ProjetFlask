@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}User profil{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+<body>
+  <button type="button" id="return" onclick="window.location.href=`{{ url_for('main_page') }}`">Return</button>
+  <h1 class="title_user_profil">{{ username }}</h1>
+  <h3 class="title_user_profil">Account</h3>
+  <form method="post">
+  <div class="label">First name : </div>
+      <input type="text" name="firstName" value="{{ firstName }}" class="inputs">
+      <br>
+      <br>
+  <div class="label">Last name : </div>
+      <input type="text" name="lastName" value="{{ lastName }}" class="inputs">
+      <br>
+      <br>
+      <div class="label">Username : </div>
+      <input type="text" name="username" value="{{ username }}" class="inputs">
+      <br>
+      <br>
+      <div class="label">Email : </div>
+      <input type="email" name="email" value="{{ email }}" class="inputs">
+      <br>
+      <br>
+      <div class="label">Age : </div>
+      <input type="number" name="age" value="{{ age }}" class="inputs">
+      <br>
+      <br>
+      <div class="label">Password : </div>
+      <input type="password" value="{{password}}" name="password" id="password" class="inputs">
+      <br>
+      <br>
+      <input type="submit" value="Submit" id="submitBtn">
+  </form>
+  {% if error != None %}
+  <p class="errorProfil">*{{error}}</p>
+  {% endif %}
+</body>
+{% endblock %}

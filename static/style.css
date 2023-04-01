@@ -1,0 +1,192 @@
+.message {
+    color:  darkgoldenrod;
+}
+
+.errorAuth {
+    color: red;
+}
+
+#return {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+}
+
+body{
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #151414;
+    color: #fff;
+}
+h1 {
+    text-align: center;
+    margin-top: 50px;
+    color: #ff8c00;
+}
+form {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 30px;
+    background-color: #292929;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+label {
+    display: block;
+    margin-bottom: 10px;
+    margin-top: 10px;
+    color: #ff8c00;
+}
+#weight,#height {
+    width: 95%;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+    background-color: #414141;
+    color: #fff;
+}
+button{
+    display: block;
+    margin-top: 20px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    background-color: #ff8c00;
+    color: #fff;
+    font-size: 16px;
+    cursor: pointer;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+}
+button:hover {
+    background-color: #404040;
+}
+
+.result {
+    font-family: Arial, sans-serif;
+    background-color: #282828;
+    border-radius: 5px;
+    color: #fff;
+    margin: 2rem auto;
+    max-width: 500px;
+    padding: 1rem;
+    text-align: center;
+}
+#resultBMI {
+    font-size: 2em;
+    margin-top: 20px;
+    text-align: center;
+}
+
+#resultBMI.green {
+    color: #00FF00;
+}
+
+#resultBMI.yellow {
+    color: #FFFF00;
+}
+
+#resultBMI.red {
+    color: #FF0000;
+}
+
+/********** USER PROFIL **********/
+form {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 30px;
+    background-color: #292929;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    color: #ff8c00;
+}
+.title_user_profil{
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 30px;
+    color: #ff8c00;
+}
+.inputs {
+    width: 95%;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+    background-color: #414141;
+    color: #fff;
+}
+#submitBtn{
+    display: block;
+    margin-top: 20px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    background-color: #ff8c00;
+    color: #fff;
+    font-size: 16px;
+    cursor: pointer;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+}
+#submitBtn:hover {
+    background-color: #404040;
+}
+.errorProfil{
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 30px;
+    color: red;
+}
+/*************** HOME **************/
+#BMIButton{
+    display: block;
+    margin: 0 auto;
+    margin-top: 10%;
+}
+
+/*************** HOME **************/
+.authSwitch{
+    display: block;
+    margin-top: 1%;
+    margin-bottom: -3%;
+}
+
+/************ History *************/
+.styled-table {
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 3%;
+    background-color: #292929;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    color: #ff8c00;
+    border-collapse: collapse;
+    font-size: 0.9em;
+    font-family: sans-serif;
+    min-width: 400px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+}
+.styled-table thead tr {
+    background-color: #ff8c00;
+    color: #ffffff;
+    text-align: left;
+}
+.styled-table th,
+.styled-table td {
+    padding: 12px 15px;
+}
+.styled-table tbody tr {
+    border-bottom: 1px solid #dddddd;
+}
+
+.styled-table tbody tr:nth-of-type(even) {
+    background-color: #f3f3f3;
+}
+
+.styled-table tbody tr:last-of-type {
+    border-bottom: 2px solid #ff8c00;
+}
+.styled-table tbody tr.history_line {
+    font-weight: bold;
+    color: #ff8c00;
+}
